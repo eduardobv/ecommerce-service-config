@@ -1,0 +1,83 @@
+# Configuraciones comunes para todos los servicios
+spring:
+  application:
+    name: ecommerce-service
+
+# Configuraciones de base de datos
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Configuraciones de Eureka (Service Discovery)
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+# Configuraciones de Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# Configuraciones de logging
+logging:
+  level:
+    root: INFO
+    com.ecommerce: DEBUG
+
+# Configuraciones de seguridad
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: ${JWT_SECRET_KEY}
+
+# Configuraciones de cache
+spring:
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+
+# Configuraciones de Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      defaultCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+
+# Configuraciones de Kafka
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ecommerce-group
+
+# Configuraciones de Zipkin
+spring:
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1.0
